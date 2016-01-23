@@ -4,6 +4,8 @@ package org.scalalabs.basic.lab02
  * higher order collection methods can be rehearsed.
  */
 import sys._
+import scala.math
+import scala.collection.mutable
 
 object CollectionExercise01 {
 
@@ -32,8 +34,45 @@ object CollectionExercise01 {
    * Case 3: so it is okay if you want to just give up
    *
    */
+  private def translateChar(c: Char): Char = {
+    c match {
+      case 'a' => 'y'
+      case 'b' => 'h'
+      case 'c' => 'e'
+      case 'd' => 's'
+      case 'e' => 'o'
+      case 'f' => 'c'
+      case 'g' => 'v'
+      case 'h' => 'x'
+      case 'i' => 'd'
+      case 'j' => 'u'
+      case 'k' => 'i'
+      case 'l' => 'g'
+      case 'm' => 'l'
+      case 'n' => 'b'
+      case 'o' => 'k'
+      case 'p' => 'r'
+      case 'q' => '_'
+      case 'r' => 't'
+      case 's' => 'n'
+      case 't' => 'w'
+      case 'u' => 'j'
+      case 'v' => 'p'
+      case 'w' => 'f'
+      case 'x' => 'm'
+      case 'y' => 'a'
+      case 'z' => '_'
+      case ' ' => ' '
+      case _ => '_'
+    }
+  }
+
+  private def translateLine(line: String): String = {
+    return line.map(translateChar(_))
+  }
+
   def googleCodeJamGooglerese(lines: String*): Seq[String] = {
-    error("fix me")
+    return lines.map(translateLine(_)).toList
   }
 }
 /*========================================================== */
@@ -49,8 +88,27 @@ object CollectionExercise02 {
    * Rewrite the method groupAdultsPerAgeGroup in the ImperativeSample java class
    * using a functional approach.
    */
+  private def groupAdultByAget(groupId: Int, person: Person,
+    groups: mutable.Map[Int, Seq[Person]]) {
+    if (groups.contains(groupId)) {
+      groups(groupId) :+= person
+    } else {
+      groups += (groupId -> Seq(person))
+    }
+  }
+
   def groupAdultsPerAgeGroup(persons: Seq[Person]): Map[Int, Seq[Person]] = {
-    error("fix me")
+    val groups = mutable.Map[Int, Seq[Person]]()
+    // persons.foreach(groupPersonByAge(groups, _))
+    persons.foreach(person => {
+      person.age / 10 match {
+        case 2 => groupAdultByAget(20, person, groups)
+        case 3 => groupAdultByAget(30, person, groups)
+        case 4 => groupAdultByAget(40, person, groups)
+        case _ => ""
+      }
+    })
+    return groups.toMap
   }
 }
 
@@ -64,8 +122,12 @@ object CollectionExercise03 {
    * checkValuesIncrease(Seq(1,2,3)) == true
    * checkValuesIncrease(Seq(1,2,2)) == false
    */
-  def checkValuesIncrease[T <% Ordered[T]](seq: Seq[T]): Boolean =
-    error("fix me")
+  def checkValuesIncrease[T <% Ordered[T]](seq: Seq[T]): Boolean = {
+    if ((seq.isEmpty) || (seq.length == 1))
+      true
+    else
+      (seq.head < seq(1)) && checkValuesIncrease(seq.tail)
+  }
 
 }
 /*========================================================== */
@@ -76,7 +138,14 @@ object CollectionExercise04 {
    * To keep it simple it's ok to use String.split to extract all words of a sentence.
    */
   def calcLengthLongestWord(lines: String*): Int = {
-    error("fix me")
+    var maxLen = 0;
+    for (line <- lines) {
+      val words = line.split(' ')
+      val lineMax = words.foldLeft(0)((m, n) => math.max(m, n.length))
+      if (lineMax > maxLen)
+        maxLen = lineMax
+    }
+    return maxLen;
   }
 }
 
@@ -88,7 +157,9 @@ object CollectionExercise05 {
    * E.g. Seq(1,2,3) is Seq(2)
    */
   def filterWithFoldLeft(seq: Seq[Int]): Seq[Int] = {
-    error("fix me")
+    seq.foldLeft(Seq[Int]()) {
+      (m: Seq[Int], n: Int) => if (n % 2 == 0) m :+ n else m
+    }
   }
 
   /**
@@ -97,7 +168,13 @@ object CollectionExercise05 {
    * E.g: Seq(1,2,3) is Map(0 -> Seq(2), 1 -> Seq(1,3))
    */
   def groupByWithFoldLeft(seq: Seq[Int]): Map[Boolean, Seq[Int]] = {
-    error("fix me")
+    val even = seq.foldLeft(Seq[Int]()) {
+      (m: Seq[Int], n: Int) => if (n % 2 == 0) m :+ n else m
+    }
+    val odd = seq.foldLeft(Seq[Int]()) {
+      (m: Seq[Int], n: Int) => if (n % 2 == 1) m :+ n else m
+    }
+    Map((false -> odd), (true -> even))
   }
 }
 

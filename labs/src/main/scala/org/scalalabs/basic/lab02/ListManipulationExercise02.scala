@@ -1,6 +1,7 @@
 package org.scalalabs.basic.lab02
 
 import scala.collection.mutable.ListBuffer
+import scala.math
 import sys._
 
 object ListManipulationExercise02 {
@@ -10,7 +11,7 @@ object ListManipulationExercise02 {
    * As usual, various ways exist: pattern matching, folding, ...
    */
   def maxElementInList(l: List[Int]): Int = {
-    error("fix me")
+    l.foldLeft(0)((m, n) => math.max(m, n))
   }
 
   /**
@@ -18,7 +19,14 @@ object ListManipulationExercise02 {
    * of the two list
    */
   def sumOfTwo(l1: List[Int], l2: List[Int]): List[Int] = {
-    error("fix me")
+    val len = math.max(l1.length, l2.length)
+    val list = for (i <- 0 to len - 1) yield {
+      var item = 0
+      if (l1.isDefinedAt(i)) item += l1(i)
+      if (l2.isDefinedAt(i)) item += l2(i)
+      item
+    }
+    list.toList
   }
 
   /**
@@ -26,7 +34,7 @@ object ListManipulationExercise02 {
    * method above
    */
   def sumOfMany(l: List[Int]*): List[Int] = {
-    error("fix me")
+    l.foldLeft(List[Int]())((m, n) => sumOfTwo(m, n))
   }
 
   case class Person(age: Int, firstName: String, lastName: String)
@@ -38,29 +46,8 @@ object ListManipulationExercise02 {
    * in a one-liner.
    */
   def separateTheMenFromTheBoys(persons: List[Person]): List[List[String]] = {
-    var boys: ListBuffer[Person] = new ListBuffer[Person]()
-    var men: ListBuffer[Person] = new ListBuffer[Person]()
-    var validBoyNames: ListBuffer[String] = new ListBuffer[String]()
-    var validMenNames: ListBuffer[String] = new ListBuffer[String]()
-
-    for (person <- persons) {
-      if (person.age < 18) {
-        boys += person
-      } else {
-        men += person
-      }
-    }
-
-    var sortedBoys = boys.toList.sortBy(_.age)
-    var sortedMen = men.toList.sortBy(_.age)
-
-    for (boy <- sortedBoys) {
-      validBoyNames += boy.firstName
-    }
-    for (man <- sortedMen) {
-      validMenNames += man.firstName
-    }
-    List(validBoyNames.toList, validMenNames.toList)
+    val groups = persons.groupBy(person => if (person.age < 18) 1 else 0)
+    groups.map(group => (group._1, group._2.sortWith((m, n) => m.age < n.age))).map(group => group._2.map(_.firstName)).toList
   }
 
 }
