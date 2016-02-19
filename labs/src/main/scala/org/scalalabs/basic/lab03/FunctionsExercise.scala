@@ -1,6 +1,7 @@
 package org.scalalabs.basic.lab03
 import scala.language.reflectiveCalls
 import sys._
+
 /**
  * This exercise introduces you to Scala functions.
  *
@@ -16,8 +17,12 @@ object FunctionsExercise01 {
   var printed = ""
   private def logPerf(elapsed: Long) = printed = s"The execution took: $elapsed ms"
 
-  def measure[T]( /* provide correct method parameter */ ): T = {
-    error("fix me")
+  def measure[T](f: => T): T = {
+    val t0 = System.currentTimeMillis()
+    val r = f
+    val t1 = System.currentTimeMillis()
+    logPerf(t1 - t0)
+    r
   }
 
 }
@@ -32,7 +37,7 @@ object FunctionsExercise02 {
 
   def plusOne(x: Int): Int = {
     //implement this using a partial function
-    error("fix me")
+    plus(x, 1)
   }
 
   def plus(x: Int, y: Int): Int = {
@@ -40,6 +45,10 @@ object FunctionsExercise02 {
   }
 
   def using[A <: { def close(): Unit }, B](closable: A)(f: A => B): B = {
-    error("fix me")
+    try {
+      f(closable)
+    } finally {
+      closable.close
+    }
   }
 }

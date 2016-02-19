@@ -36,6 +36,16 @@ object ForExpressionExercise01 {
     (fromNumber, toNumber)
   }
 
+  private def isPalindrome(input: String): Boolean = {
+    val len = input.length()
+    for (idx <- 0 to (len - 1) / 2) {
+      if (input(idx) != input(len - idx - 1)) {
+        return false;
+      }
+    }
+    true
+  }
+
   /**
    * Calculate the largest palindrome from a n-digit number using a for expression.
    *
@@ -45,7 +55,19 @@ object ForExpressionExercise01 {
    * @return largest palindrome.
    */
   def largestPalindromWithForExpression(amountOfDigits: Int): Int = {
-    error("Fix me")
+    val (fromNum, toNum) = getFromAndTo(amountOfDigits)
+    var maxPalindrome = 0
+
+    for (m <- fromNum to toNum) {
+      for (n <- fromNum to toNum) {
+        val product = m * n
+        if (isPalindrome(product.toString)) {
+          maxPalindrome = math.max(maxPalindrome, product)
+        }
+      }
+    }
+
+    maxPalindrome
   }
 
   /**
@@ -57,6 +79,18 @@ object ForExpressionExercise01 {
    * @return largest palindrome.
    */
   def largestPalindromWithHigherOrderFunctions(amountOfDigits: Int): Int = {
-    error("Fix me")
+    val (fromNum, toNum) = getFromAndTo(amountOfDigits)
+    var maxPalindrome = 0
+
+    for (m <- fromNum to toNum) {
+      for (n <- fromNum to toNum) {
+        val product = m * n
+        if (isPalindrome(product.toString)) {
+          maxPalindrome = math.max(maxPalindrome, product)
+        }
+      }
+    }
+
+    maxPalindrome
   }
 }
